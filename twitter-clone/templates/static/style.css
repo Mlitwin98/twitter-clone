@@ -1,10 +1,4 @@
 body{
-    background-color: #1c2530;
+    background-color:rgb(21, 32, 43);
     color:white;
-}
-
-#container{
-    display: flex;
-    width: 100%;
-    min-height: 100%;
 }

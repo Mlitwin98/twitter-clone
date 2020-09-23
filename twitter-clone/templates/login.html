@@ -1,0 +1,29 @@
+{% load static %}
+<html>
+    <head>
+        <title>Home</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="{% static 'style.css' %}">
+    </head>
+    <body>
+        <div class='container w-50'>
+            <div class='container w-50 h-100 d-flex flex-column text-center'>
+                <h1 class='display-4 font-weight-bolder mb-4'>Login</h1>
+                <div class='container w-75'>
+                    <form action='login' method='POST'>
+                        {% csrf_token %}
+                        <input class='form-control mb-2' id='email' type='email' placeholder='Email' name='email'>
+                        <input class='form-control mb-2' id='pwd' type='password' placeholder='Password' name='password'>
+                        <div class='form-inline'>
+                            <button class='btn btn-info mb-0 badge-pill w-50' type='submit' name='login'>Login</button>
+                            <button class='btn btn-outline-info mb-0 badge-pill w-50' type='submit' name='cancel'>Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

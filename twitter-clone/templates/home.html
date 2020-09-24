@@ -12,5 +12,7 @@
         {% if user.is_authenticated %}
             Witaj {{ user.username }}
         {% endif %}
+
+        <a href='{% url 'logout' %}'><button  class='btn btn-outline-info'>Logout</button></a>
     </body>
 </html>

@@ -10,14 +10,14 @@
     </head>
     <body>
         <div class='container w-50'>
-            <div class='container w-50 h-100 d-flex flex-column text-center'>
+            <div class='container w-50 d-flex flex-column text-center'>
                 <h1 class='display-4 font-weight-bolder mb-4'>Register Now</h1>
                 <div class='container w-75'>
-                    <form action='register' method='POST'>
+                    <form action='register' method='POST' novalidate="novalidate">
                         {% csrf_token %}
-                        <input class='form-control mb-2' type='text' placeholder='Name' name='name' maxlength='50'>
-                        <input class='form-control mb-2' id='email' type='email' placeholder='Email' name='email'>
-                        <input class='form-control mb-2' id='pwd' type='password' placeholder='Password' name='password'>
+                        {% for field in form %}
+                            {{ field }}
+                        {% endfor %}
                         <div class='form-inline'>
                             <button class='btn btn-info mb-0 badge-pill w-50' type='submit' name='register'>Register</button>
                             <button class='btn btn-outline-info mb-0 badge-pill w-50' type='submit' name='cancel'>Cancel</button>
@@ -25,6 +25,11 @@
                     </form>
                 </div>
             </div>
+            {% for message in messages %}
+                <div class='alert-danger w-50 container badge-pill h3 text-center mt-4'>
+                    {{ message }}
+                </div>
+            {% endfor %}
         </div>
     </body>
 </html>

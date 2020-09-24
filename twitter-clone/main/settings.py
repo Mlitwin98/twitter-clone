@@ -128,3 +128,5 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'twitter.myAuth.EmailBackend'
 ]
+
+LOGIN_URL='/'

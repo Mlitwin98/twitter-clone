@@ -1,4 +1,29 @@
 body{
     background-color:rgb(21, 32, 43);
     color:white;
+    font-size: 19px;
+}
+
+textarea{
+    background-color:rgb(21, 32, 43);
+    border: none;
+    resize: none;
+    color: white;
+}
+
+textarea::placeholder{
+    color: rgb(136,153,166);
+}
+
+a.deco-none{
+    color:white !important;
+    text-decoration:none;
+}
+
+a.deco-none:hover{
+    background-color: rgb(28,137,205);
+}
+
+.icon{
+    filter: invert(94%) sepia(6%) saturate(0%) hue-rotate(110deg) brightness(105%) contrast(109%);
 }

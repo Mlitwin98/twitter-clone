@@ -9,10 +9,85 @@
         <link rel="stylesheet" href="{% static 'style.css' %}">
     </head>
     <body>
-        {% if user.is_authenticated %}
-            Witaj {{ user.username }}
-        {% endif %}
+        <div class = 'd-flex'> 
+            <div class = 'container d-flex flex-row-reverse'>
+                <div class = 'd-flex flex-column'>
+                    <a href='#' class = 'm-2 deco-none badge-pill pt-2 pb-2 pl-3 pr-3'><img src={% static 'home.png' %} class = 'icon mr-3'>Home</a>
+                    <a href='#' class = 'm-2 deco-none badge-pill pt-2 pb-2 pl-3 pr-3'><img src={% static 'user.png' %} class = 'icon mr-3'>Profile</a>
+                    <a href='#' class = 'm-2 deco-none badge-pill pt-2 pb-2 pl-3 pr-3'><img src={% static 'bell.png' %} class = 'icon mr-3'>Notifications</a>
+                    <a href='#' class = 'm-2 deco-none badge-pill pt-2 pb-2 pl-3 pr-3'><img src={% static 'settings.png' %} class = 'icon mr-3'>Settings</a>
+                    <a href='#' class = 'm-2 deco-none badge-pill pt-2 pb-2 pl-3 pr-3'><img src={% static 'look.png' %} class = 'icon mr-3'>Look</a>
+                    <a href='{% url 'logout' %}'><button  class='btn btn-outline-info m-2'>Logout</button></a>
+                </div>
+            </div>
 
-        <a href='{% url 'logout' %}'><button  class='btn btn-outline-info'>Logout</button></a>
+            <div class = 'container d-flex flex-column'>
+                <div class = 'border border-secondary border-top-0 p-3'>Tweet MID</div>
+                <div class = 'border border-secondary p-3 d-flex flex-column'>
+                    <div class = 'd-flex flex-row'>
+                        <div>PHOTO</div>
+                        <div class='w-100'>
+                            <form action='tweet' method='post'>
+                                <textarea class='w-100 h-100 m-1' placeholder="Tweet"></textarea>
+                            </form>
+                        </div>
+                    </div>
+                    <div class = 'd-flex flex-row-reverse'>
+                        <button class = 'btn btn-info badge-pill w-25 mt-3'>Tweet</button>
+                    </div>
+                </div>
+                <div class = 'border border-secondary d-flex flex-column w-100 p-3'>
+                    <div class = 'm-1'>KTO/KIEDY</div>
+                    <div class = 'm-1'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                                Phasellus vel neque feugiat quam dictum pharetra. 
+                                Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Suspendisse finibus felis eu accumsan ultrices. Mauris pellentesque varius luctus. Curabitur at fringilla nisl.</div>
+                    <div class = 'm-1'>Like Comment</div>
+                </div>
+                
+                <div class = 'border border-secondary d-flex flex-column w-100 p-3'>
+                    <div class = 'm-1'>KTO/KIEDY</div>
+                    <div class = 'm-1'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                                Phasellus vel neque feugiat quam dictum pharetra. 
+                                Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Suspendisse finibus felis eu accumsan ultrices. Mauris pellentesque varius luctus. Curabitur at fringilla nisl.</div>
+                    <div class = 'm-1'>Like Comment</div>
+                </div>
+
+                <div class = 'border border-secondary d-flex flex-column w-100 p-3'>
+                    <div class = 'm-1'>KTO/KIEDY</div>
+                    <div class = 'm-1'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                                Phasellus vel neque feugiat quam dictum pharetra. 
+                                Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Suspendisse finibus felis eu accumsan ultrices. Mauris pellentesque varius luctus. Curabitur at fringilla nisl.</div>
+                    <div class = 'm-1'>Like Comment</div>
+                </div>
+
+                <div class = 'border border-secondary d-flex flex-column w-100 p-3'>
+                    <div class = 'm-1'>KTO/KIEDY</div>
+                    <div class = 'm-1'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                                Phasellus vel neque feugiat quam dictum pharetra. 
+                                Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Suspendisse finibus felis eu accumsan ultrices. Mauris pellentesque varius luctus. Curabitur at fringilla nisl.</div>
+                    <div class = 'm-1'>Like Comment</div>
+                </div>
+
+                <div class = 'border border-secondary d-flex flex-column w-100 p-3'>
+                    <div class = 'm-1'>KTO/KIEDY</div>
+                    <div class = 'm-1'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                                Phasellus vel neque feugiat quam dictum pharetra. 
+                                Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Suspendisse finibus felis eu accumsan ultrices. Mauris pellentesque varius luctus. Curabitur at fringilla nisl.</div>
+                    <div class = 'm-1'>Like Comment</div>
+                </div>
+
+                <div class = 'border border-secondary d-flex flex-column w-100 p-3'>
+                    <div class = 'm-1'>KTO/KIEDY</div>
+                    <div class = 'm-1'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                                Phasellus vel neque feugiat quam dictum pharetra. 
+                                Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Suspendisse finibus felis eu accumsan ultrices. Mauris pellentesque varius luctus. Curabitur at fringilla nisl.</div>
+                    <div class = 'm-1'>Like Comment</div>
+                </div>
+            </div>
+
+            <div class = 'container d-flex flex-row'>
+                <div>RIGHT</div>
+            </div>
+        </div>  
     </body>
 </html>

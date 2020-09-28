@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, logout as auth_logout, login as auth_login
 from django.contrib import messages
+from twitter.models import Tweet
 
 from twitter.forms import SignUpForm
 
@@ -59,6 +60,13 @@ def register(request):
 @login_required(redirect_field_name=None)
 def home(request):
     if request.method == 'POST':
-        return HttpResponse('make post')
+        author = request.user.username
+        content = request.POST['tweet']
+        tweet = Tweet(author=author, content=content)
+        tweet.save()
+
+        tweets = Tweet.objects.all()
+        return redirect('home')
     else:
-        return render(request, 'home.html')
+        tweets = Tweet.objects.all()
+        return render(request, 'home.html', {'tweets':tweets[::-1]})

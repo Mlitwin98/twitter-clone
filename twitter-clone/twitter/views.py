@@ -70,3 +70,11 @@ def home(request):
     else:
         tweets = Tweet.objects.all()
         return render(request, 'home.html', {'tweets':tweets[::-1]})
+
+def profile(request, username):
+    try:
+        userProfile = User.objects.get(username=username)
+    except User.DoesNotExist:
+        userProfile = None
+    tweets = Tweet.objects.filter(author__exact=username)
+    return render(request, 'profile.html', {'userProfile':userProfile, 'tweets':tweets[::-1]})

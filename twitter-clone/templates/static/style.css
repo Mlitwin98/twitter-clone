@@ -27,3 +27,11 @@ a.deco-none:hover{
 .icon{
     filter: invert(94%) sepia(6%) saturate(0%) hue-rotate(110deg) brightness(105%) contrast(109%);
 }
+
+.f-16{
+    font-size: 16px;
+}
+
+.f-20{
+    font-size: 20px;
+}

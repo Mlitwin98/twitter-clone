@@ -35,3 +35,17 @@ a.deco-none:hover{
 .f-20{
     font-size: 20px;
 }
+
+.modal-content{
+    background-color: rgb(21, 32, 43);
+ }
+
+ .profilePic{
+     min-width:49px;
+     max-width:100px;
+ }
+ 
+ .profileBanner{
+     height: 200px;
+     width: 100%;
+ }

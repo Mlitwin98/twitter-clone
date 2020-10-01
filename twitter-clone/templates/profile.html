@@ -28,20 +28,23 @@
                     <div class = 'font-weight-bold f-20'>{{ userProfile.username }}</div>
                     <div class = 'text-white-50 f-16'>{{ tweets|length }} tweets</div>
                 </div>
-                <div class = 'border border-secondary p-3 font-weight-bold'>PROFILE BANNER<br><br><br><br><br></div>
+                <div class = 'border border-secondary font-weight-bold'><img src= "media/{{ userProfile.profile.backgroundPic }}" onerror="this.onerror=null; this.src='{% static 'defaultBanner.jpg' %}'" alt="" class = 'profileBanner'"></div>
                 <div class = 'border border-secondary p-3'>
                     <div class = 'w-100 d-flex'>
-                        <div class = 'font-weight-bold flex-fill'> PROFILE PIC </div>
+                        <img src= "media/{{ userProfile.profile.profilePic }}" class='profilePic' onerror="this.onerror=null; this.src='{% static 'defaultBanner.jpg' %}'" alt="">
                         <div class = 'd-flex flex-row-reverse flex-fill'>
-                            {% if user.username == userProfile.username %}
-                                <a href='#'><button  class='btn btn-outline-info m-2 badge-pill pt-2 pb-2 pl-3 pr-3'>Edit profile</button></a>
-                                {% else %}
-                                <a href='#'><button  class='btn btn-outline-info m-2 badge-pill pt-2 pb-2 pl-3 pr-3'>Follow</button></a>
-                            {% endif %}
+                            <div class = 'd-flex flex-column '>
+                                {% if user.username == userProfile.username %}
+                                    <button  class='btn btn-outline-info badge-pill pt-2 pb-2 pl-3 pr-3 my-auto' data-toggle="modal" data-target="#editProfile">Edit profile</button>
+                                    {% else %}
+                                    <a href='#'><button  class='btn btn-outline-info badge-pill pt-2 pb-2 pl-3 pr-3'>Follow</button></a>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                     <div class = 'font-weight-bold'>{{ userProfile.username }}</div>
                     <div class = 'text-white-50'>{{ userProfile.email }}</div><br>
+                    <div class = 'mt-2 mb-2'>{{ userProfile.profile.bio }}</div><br>
                     <div class = 'text-white-50'>Joined {{ userProfile.date_joined }}</div>
                     <div class = 'font-weight-bold'><span class='font-weight-normal text-white-50'>Follows</span> X<span class='ml-5 font-weight-normal text-white-50'>Followed by</span> Y</div>
                 </div>
@@ -72,5 +75,31 @@
                 }  
             }
         </script>  
+        <!-- MODAL -->
+        <div class="modal fade" id="editProfile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <form action='{% url 'profile' user.username %}' method='post' enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="exampleModalLabel">Edit profile</h4>
+                        </div>
+                        <div class="modal-body">
+                            Profile banner:
+                            <input type="file" name="banner" accept="image/*" class="form-control-file"><br><br>
+                            Profile photo:
+                            <input type="file" name="pic" accept="image/*" class="form-control-file"><br><br>
+                            Profile bio:
+                            <textarea class='w-100 m-1 input border' name='bio' rows='5'>{{ userProfile.profile.bio }}</textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-info m-2 badge-pill pt-2 pb-2 pl-3 pr-3" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-outline-info m-2 badge-pill pt-2 pb-2 pl-3 pr-3">Save changes</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- END -->
     </body>
 </html>

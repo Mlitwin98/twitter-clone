@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, logout as auth_logout, login as auth_login
 from django.contrib import messages
-from twitter.models import Tweet
+from twitter.models import Tweet, Profile
 
 from twitter.forms import SignUpForm
 
@@ -72,9 +72,19 @@ def home(request):
         return render(request, 'home.html', {'tweets':tweets[::-1]})
 
 def profile(request, username):
-    try:
-        userProfile = User.objects.get(username=username)
-    except User.DoesNotExist:
-        userProfile = None
-    tweets = Tweet.objects.filter(author__exact=username)
-    return render(request, 'profile.html', {'userProfile':userProfile, 'tweets':tweets[::-1]})
+    if request.method == 'POST':
+        user = User.objects.get(username=username)
+
+        user.profile.bio = request.POST['bio']
+        user.profile.profilePic = request.FILES['pic'] if 'pic' in request.FILES else user.profile.profilePic
+        user.profile.backgroundPic = request.FILES['banner'] if 'banner' in request.FILES else user.profile.backgroundPic
+
+        user.save()
+        return redirect('profile', username=username)
+    else:
+        try:
+            userProfile = User.objects.get(username=username)
+        except User.DoesNotExist:
+            userProfile = None
+        tweets = Tweet.objects.filter(author__exact=username)
+        return render(request, 'profile.html', {'userProfile':userProfile, 'tweets':tweets[::-1]})

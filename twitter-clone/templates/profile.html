@@ -28,16 +28,25 @@
                     <div class = 'font-weight-bold f-20'>{{ userProfile.username }}</div>
                     <div class = 'text-white-50 f-16'>{{ tweets|length }} tweets</div>
                 </div>
-                <div class = 'border border-secondary font-weight-bold'><img src= "media/{{ userProfile.profile.backgroundPic }}" onerror="this.onerror=null; this.src='{% static 'defaultBanner.jpg' %}'" alt="" class = 'profileBanner'"></div>
+                <div class = 'border border-secondary font-weight-bold'><img src= "media/{{ userProfile.profile.backgroundPic }}" onerror="this.onerror=null; this.src='{% static 'defaultBanner.jpg' %}'" alt="" class = 'profileBanner'></div>
                 <div class = 'border border-secondary p-3'>
                     <div class = 'w-100 d-flex'>
-                        <img src= "media/{{ userProfile.profile.profilePic }}" class='profilePic' onerror="this.onerror=null; this.src='{% static 'defaultBanner.jpg' %}'" alt="">
+                        <img src= "media/{{ userProfile.profile.profilePic }}" class='profilePic' onerror="this.onerror=null; this.src='{% static 'defaultPic.jpg' %}'" alt="">
                         <div class = 'd-flex flex-row-reverse flex-fill'>
                             <div class = 'd-flex flex-column '>
                                 {% if user.username == userProfile.username %}
                                     <button  class='btn btn-outline-info badge-pill pt-2 pb-2 pl-3 pr-3 my-auto' data-toggle="modal" data-target="#editProfile">Edit profile</button>
                                     {% else %}
-                                    <a href='#'><button  class='btn btn-outline-info badge-pill pt-2 pb-2 pl-3 pr-3'>Follow</button></a>
+                                    {% if user.is_authenticated %}
+                                    <form action='{% url 'profile' userProfile.username %}' method='post'>
+                                        {% csrf_token %}
+                                        {% if following %}
+                                            <button name='unfollow' type='submit'  class='btn btn-info badge-pill pt-2 pb-2 pl-3 pr-3'>Followed</button>
+                                            {% else %}
+                                                <button name='follow' type='submit'  class='btn btn-outline-info badge-pill pt-2 pb-2 pl-3 pr-3'>Follow</button>
+                                        {% endif %}
+                                    </form>
+                                    {% endif %}
                                 {% endif %}
                             </div>
                         </div>

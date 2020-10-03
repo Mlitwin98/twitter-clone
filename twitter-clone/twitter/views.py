@@ -5,9 +5,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, logout as auth_logout, login as auth_login
 from django.contrib import messages
-from twitter.models import Tweet, Profile
+from twitter.models import Tweet, Profile, Follow
 from twitter.myDecor import check_if_user_logged
-
 from twitter.forms import SignUpForm
 
 # Create your views here.
@@ -77,18 +76,32 @@ def home(request):
 
 def profile(request, username):
     if request.method == 'POST':
-        user = User.objects.get(username=username)
+        if 'follow' in request.POST:
+            Follow.objects.create(user_id=User.objects.get(username=username), following_user_id=request.user)
+            return redirect('profile', username=username)
+        elif 'unfollow' in request.POST:
+            Follow.objects.filter(user_id=User.objects.get(username=username), following_user_id=request.user).delete()
+            return redirect('profile', username=username)
+        else:
+            user = User.objects.get(username=username)
 
-        user.profile.bio = request.POST['bio']
-        user.profile.profilePic = request.FILES['pic'] if 'pic' in request.FILES else user.profile.profilePic
-        user.profile.backgroundPic = request.FILES['banner'] if 'banner' in request.FILES else user.profile.backgroundPic
+            user.profile.bio = request.POST['bio']
+            user.profile.profilePic = request.FILES['pic'] if 'pic' in request.FILES else user.profile.profilePic
+            user.profile.backgroundPic = request.FILES['banner'] if 'banner' in request.FILES else user.profile.backgroundPic
 
-        user.save()
-        return redirect('profile', username=username)
+            user.save()
+            return redirect('profile', username=username)
     else:
         try:
             userProfile = User.objects.get(username=username)
         except User.DoesNotExist:
-            userProfile = None
+            return HttpResponse('User Not Found')
+
         tweets = Tweet.objects.filter(author__exact=username)
-        return render(request, 'profile.html', {'userProfile':userProfile, 'tweets':tweets[::-1]})
+
+        following = False
+        for follow in request.user.followers.all():
+            if userProfile.id == follow.user_id_id:
+                following=True
+
+        return render(request, 'profile.html', {'userProfile':userProfile, 'tweets':tweets[::-1], 'following':following})

@@ -6,13 +6,16 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, logout as auth_logout, login as auth_login
 from django.contrib import messages
 from twitter.models import Tweet, Profile
+from twitter.myDecor import check_if_user_logged
 
 from twitter.forms import SignUpForm
 
 # Create your views here.
+@check_if_user_logged
 def index(request):
     return render(request, 'index.html')
 
+@check_if_user_logged
 def login(request):
     if request.method == 'POST':
         if 'login' in request.POST:
@@ -34,6 +37,7 @@ def logout(reqeuest):
     auth_logout(reqeuest)
     return redirect('index')
 
+@check_if_user_logged
 def register(request):
     if request.method == 'POST':
         if 'cancel' in request.POST:

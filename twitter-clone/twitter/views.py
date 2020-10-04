@@ -68,10 +68,13 @@ def home(request):
         tweet = Tweet(author=author, content=content)
         tweet.save()
 
-        tweets = Tweet.objects.all()
         return redirect('home')
     else:
-        tweets = Tweet.objects.all()
+        followedUsers = [request.user.username]
+        followedQuery = request.user.followers.all()
+        for followed in followedQuery:
+            followedUsers.append(User.objects.get(id=followed.user_id_id).username)
+        tweets = Tweet.objects.filter(author__in=followedUsers)
         return render(request, 'home.html', {'tweets':tweets[::-1]})
 
 def profile(request, username):

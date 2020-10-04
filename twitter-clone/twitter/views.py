@@ -107,4 +107,7 @@ def profile(request, username):
             if userProfile.id == follow.user_id_id:
                 following=True
 
-        return render(request, 'profile.html', {'userProfile':userProfile, 'tweets':tweets[::-1], 'following':following})
+        followersNum = request.user.following.all().count()
+        followedNum = request.user.followers.all().count()
+
+        return render(request, 'profile.html', {'userProfile':userProfile, 'tweets':tweets[::-1], 'following':following, 'followersNum':followersNum, 'followedNum':followedNum})

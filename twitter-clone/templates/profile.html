@@ -55,7 +55,7 @@
                     <div class = 'text-white-50'>{{ userProfile.email }}</div><br>
                     <div class = 'mt-2 mb-2'>{{ userProfile.profile.bio }}</div><br>
                     <div class = 'text-white-50'>Joined {{ userProfile.date_joined }}</div>
-                    <div class = 'font-weight-bold'><span class='font-weight-normal text-white-50'>Follows</span> X<span class='ml-5 font-weight-normal text-white-50'>Followed by</span> Y</div>
+                    <div class = 'font-weight-bold'><span class='font-weight-normal text-white-50'>Follows </span>{{ followedNum }}<span class='ml-5 font-weight-normal text-white-50'>Followed by </span>{{ followersNum }}</div>
                 </div>
                 {% for tweet in tweets %}
                     <div class = 'border border-secondary d-flex flex-column w-100 p-3'>

@@ -59,7 +59,17 @@
                 </div>
                 {% for tweet in tweets %}
                     <div class = 'border border-secondary d-flex flex-column w-100 p-3'>
-                        <div class = 'm-1 text-white-50'>{{tweet.author}} &#8226;&#8226;&#8226;  {{tweet.timeStamp}}</div>
+                        <div class = 'd-flex flex-row w-100'>
+                            <div class = 'm-1 text-white-50 flex-fill'>{{tweet.author}} &#8226;&#8226;&#8226;  {{tweet.timeStamp}}</div>
+                            <div class = 'd-flex flex-row-reverse flex-fill'>
+                                <div>
+                                <form action='{% url 'profile' username=user.username tweetID=tweet.id %}' method='post'>
+                                    {% csrf_token %}
+                                    <button type='submit' name='delete' class = 'btn btn-info badge-pill pt-2 pb-2 pl-3 pr-3'>Delete</button></a>
+                                </form>
+                                </div>
+                            </div>
+                        </div>
                         <div class = 'm-1'>{{tweet.content}}</div>
                         <div class = 'm-1 text-white-50'><img src={% static 'heart.png' %} onClick="changeImage(this)" class = 'icon mr-2'>X <img src={% static 'comment.png' %} class = 'icon ml-5 mr-2'> Y</div>
                     </div>

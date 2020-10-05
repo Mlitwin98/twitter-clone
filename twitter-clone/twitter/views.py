@@ -77,13 +77,16 @@ def home(request):
         tweets = Tweet.objects.filter(author__in=followedUsers)
         return render(request, 'home.html', {'tweets':tweets[::-1]})
 
-def profile(request, username):
+def profile(request, username, tweetID=None):
     if request.method == 'POST':
         if 'follow' in request.POST:
             Follow.objects.create(user_id=User.objects.get(username=username), following_user_id=request.user)
             return redirect('profile', username=username)
         elif 'unfollow' in request.POST:
             Follow.objects.filter(user_id=User.objects.get(username=username), following_user_id=request.user).delete()
+            return redirect('profile', username=username)
+        elif 'delete' in request.POST:
+            Tweet.objects.get(id=tweetID).delete()
             return redirect('profile', username=username)
         else:
             user = User.objects.get(username=username)

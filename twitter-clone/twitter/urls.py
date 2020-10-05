@@ -10,6 +10,7 @@ urlpatterns = [
     path('logout', views.logout, name='logout'),
     path('home', views.home, name='home'),
     path('<str:username>', views.profile, name='profile'),
+    path('<str:username>/<int:tweetID>', views.profile, name='profile'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,85 +1,56 @@
+{% extends 'main_template.html' %}
 {% load static %}
-<html>
-    <head>
-        <title>Home</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="{% static 'style.css' %}">
-    </head>
-    <body>
-        <div class = 'd-flex'> 
-            <div class = 'container d-flex flex-row-reverse'>
-                <div class = 'd-flex flex-column'>
-                    <a href='{% url 'home' %}' class = 'm-2 deco-none badge-pill pt-2 pb-2 pl-3 pr-3'><img src={% static 'home.png' %} class = 'icon mr-3'>Home</a>
-                    {% if user.is_authenticated %}
-                        <a href='{% url 'profile' user.username %}' class = 'm-2 deco-none badge-pill pt-2 pb-2 pl-3 pr-3'><img src={% static 'user.png' %} class = 'icon mr-3'>Profile</a>
-                    {% endif %}
-                    <a href='#' class = 'm-2 deco-none badge-pill pt-2 pb-2 pl-3 pr-3'><img src={% static 'bell.png' %} class = 'icon mr-3'>Notifications</a>
-                    <a href='#' class = 'm-2 deco-none badge-pill pt-2 pb-2 pl-3 pr-3'><img src={% static 'settings.png' %} class = 'icon mr-3'>Settings</a>
-                    <a href='#' class = 'm-2 deco-none badge-pill pt-2 pb-2 pl-3 pr-3'><img src={% static 'look.png' %} class = 'icon mr-3'>Look</a>
-                    <a href='{% url 'logout' %}'><button  class='btn btn-outline-info m-2'>Logout</button></a>
-                </div>
-            </div>
-
-            <div class = 'container d-flex flex-column'>
-                <div class = 'border border-secondary border-top-0 p-1 pl-3'>
-                    <div class = 'font-weight-bold f-20'>{{ userProfile.username }}</div>
-                    <div class = 'text-white-50 f-16'>{{ tweets|length }} tweets</div>
-                </div>
-                <div class = 'border border-secondary font-weight-bold'><img src= "media/{{ userProfile.profile.backgroundPic }}" onerror="this.onerror=null; this.src='{% static 'defaultBanner.jpg' %}'" alt="" class = 'profileBanner'></div>
-                <div class = 'border border-secondary p-3'>
-                    <div class = 'w-100 d-flex'>
-                        <img src= "media/{{ userProfile.profile.profilePic }}" class='profilePic' onerror="this.onerror=null; this.src='{% static 'defaultPic.jpg' %}'" alt="">
-                        <div class = 'd-flex flex-row-reverse flex-fill'>
-                            <div class = 'd-flex flex-column '>
-                                {% if user.username == userProfile.username %}
-                                    <button  class='btn btn-outline-info badge-pill pt-2 pb-2 pl-3 pr-3 my-auto' data-toggle="modal" data-target="#editProfile">Edit profile</button>
-                                    {% else %}
-                                    {% if user.is_authenticated %}
-                                    <form action='{% url 'profile' userProfile.username %}' method='post'>
-                                        {% csrf_token %}
-                                        {% if following %}
-                                            <button name='unfollow' type='submit'  class='btn btn-info badge-pill pt-2 pb-2 pl-3 pr-3'>Followed</button>
-                                            {% else %}
-                                                <button name='follow' type='submit'  class='btn btn-outline-info badge-pill pt-2 pb-2 pl-3 pr-3'>Follow</button>
-                                        {% endif %}
-                                    </form>
-                                    {% endif %}
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                    <div class = 'font-weight-bold'>{{ userProfile.username }}</div>
-                    <div class = 'text-white-50'>{{ userProfile.email }}</div><br>
-                    <div class = 'mt-2 mb-2'>{{ userProfile.profile.bio }}</div><br>
-                    <div class = 'text-white-50'>Joined {{ userProfile.date_joined }}</div>
-                    <div class = 'font-weight-bold'><span class='font-weight-normal text-white-50'>Follows </span>{{ followedNum }}<span class='ml-5 font-weight-normal text-white-50'>Followed by </span>{{ followersNum }}</div>
-                </div>
-                {% for tweet in tweets %}
-                    <div class = 'border border-secondary d-flex flex-column w-100 p-3'>
-                        <div class = 'd-flex flex-row w-100'>
-                            <div class = 'm-1 text-white-50 flex-fill'>{{tweet.author}} &#8226;&#8226;&#8226;  {{tweet.timeStamp}}</div>
-                            <div class = 'd-flex flex-row-reverse flex-fill'>
-                                <div>
-                                <form action='{% url 'profile' username=user.username tweetID=tweet.id %}' method='post'>
-                                    {% csrf_token %}
-                                    <button type='submit' name='delete' class = 'btn btn-info badge-pill pt-2 pb-2 pl-3 pr-3'>Delete</button></a>
-                                </form>
-                                </div>
-                            </div>
-                        </div>
-                        <div class = 'm-1'>{{tweet.content}}</div>
-                        <div class = 'm-1 text-white-50'><img src={% static 'heart.png' %} onClick="changeImage(this)" class = 'icon mr-2'>X <img src={% static 'comment.png' %} class = 'icon ml-5 mr-2'> Y</div>
-                    </div>
-                {% endfor %}
-            </div>
-
-            <div class = 'container d-flex flex-row'>
-                <div>RIGHT</div>
-            </div>
+{% block content %}
+    <div class = 'border border-secondary border-top-0 p-1 pl-3'>
+            <div class = 'font-weight-bold f-20'>{{ userProfile.username }}</div>
+            <div class = 'text-white-50 f-16'>{{ tweets|length }} tweets</div>
         </div>
+        <div class = 'border border-secondary font-weight-bold'><img src= "media/{{ userProfile.profile.backgroundPic }}" onerror="this.onerror=null; this.src='{% static 'defaultBanner.jpg' %}'" alt="" class = 'profileBanner'></div>
+        <div class = 'border border-secondary p-3'>
+            <div class = 'w-100 d-flex'>
+                <img src= "media/{{ userProfile.profile.profilePic }}" class='profilePic' onerror="this.onerror=null; this.src='{% static 'defaultPic.jpg' %}'" alt="">
+                <div class = 'd-flex flex-row-reverse flex-fill'>
+                    <div class = 'd-flex flex-column '>
+                        {% if user.username == userProfile.username %}
+                            <button  class='btn btn-outline-info badge-pill pt-2 pb-2 pl-3 pr-3 my-auto' data-toggle="modal" data-target="#editProfile">Edit profile</button>
+                            {% else %}
+                            {% if user.is_authenticated %}
+                            <form action='{% url 'profile' userProfile.username %}' method='post'>
+                                {% csrf_token %}
+                                {% if following %}
+                                    <button name='unfollow' type='submit'  class='btn btn-info badge-pill pt-2 pb-2 pl-3 pr-3'>Followed</button>
+                                    {% else %}
+                                        <button name='follow' type='submit'  class='btn btn-outline-info badge-pill pt-2 pb-2 pl-3 pr-3'>Follow</button>
+                                {% endif %}
+                            </form>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class = 'font-weight-bold'>{{ userProfile.username }}</div>
+            <div class = 'text-white-50'>{{ userProfile.email }}</div><br>
+            <div class = 'mt-2 mb-2'>{{ userProfile.profile.bio }}</div><br>
+            <div class = 'text-white-50'>Joined {{ userProfile.date_joined }}</div>
+            <div class = 'font-weight-bold'><span class='font-weight-normal text-white-50'>Follows </span>{{ followedNum }}<span class='ml-5 font-weight-normal text-white-50'>Followed by </span>{{ followersNum }}</div>
+        </div>
+        {% for tweet in tweets %}
+            <div class = 'border border-secondary d-flex flex-column w-100 p-3'>
+                <div class = 'd-flex flex-row w-100'>
+                    <div class = 'm-1 text-white-50 flex-fill'>{{tweet.author}} &#8226;&#8226;&#8226;  {{tweet.timeStamp}}</div>
+                    <div class = 'd-flex flex-row-reverse flex-fill'>
+                        <div>
+                        <form action='{% url 'profile' username=user.username tweetID=tweet.id %}' method='post'>
+                            {% csrf_token %}
+                            <button type='submit' name='delete' class = 'btn btn-info badge-pill pt-2 pb-2 pl-3 pr-3'>Delete</button></a>
+                        </form>
+                        </div>
+                    </div>
+                </div>
+                <div class = 'm-1'>{{tweet.content}}</div>
+                <div class = 'm-1 text-white-50'><img src={% static 'heart.png' %} onClick="changeImage(this)" class = 'icon mr-2'>X <img src={% static 'comment.png' %} class = 'icon ml-5 mr-2'> Y</div>
+            </div>
+        {% endfor %}
         <script>
             function changeImage(thi) {
                 if (thi.getAttribute("src") == "{% static 'heart.png' %}")
@@ -120,5 +91,4 @@
             </div>
         </div>
         <!-- END -->
-    </body>
-</html>
+{% endblock content %}

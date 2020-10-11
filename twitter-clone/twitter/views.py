@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, logout as auth_logout, login as auth_login
 from django.contrib import messages
+from django.db.models import Count
+
 from twitter.models import Tweet, Profile, Follow
 from twitter.myDecor import check_if_user_logged
 from twitter.forms import SignUpForm
@@ -75,7 +77,10 @@ def home(request):
         for followed in followedQuery:
             followedUsers.append(User.objects.get(id=followed.user_id_id).username)
         tweets = Tweet.objects.filter(author__in=followedUsers)
-        return render(request, 'home.html', {'tweets':tweets[::-1]})
+        
+        rec_profiles = User.objects.annotate(count=Count('followers')).order_by('followers').exclude(username=request.user.username)[:5]
+
+        return render(request, 'home.html', {'tweets':tweets[::-1], 'rec_profiles':rec_profiles})
 
 def profile(request, username, tweetID=None):
     if request.method == 'POST':
@@ -112,5 +117,6 @@ def profile(request, username, tweetID=None):
 
         followersNum = request.user.following.all().count()
         followedNum = request.user.followers.all().count()
+        rec_profiles = User.objects.annotate(count=Count('followers')).order_by('followers').exclude(username=request.user.username).exclude(username=username)[:5]
 
-        return render(request, 'profile.html', {'userProfile':userProfile, 'tweets':tweets[::-1], 'following':following, 'followersNum':followersNum, 'followedNum':followedNum})
+        return render(request, 'profile.html', {'userProfile':userProfile, 'tweets':tweets[::-1], 'following':following, 'followersNum':followersNum, 'followedNum':followedNum, 'rec_profiles':rec_profiles})

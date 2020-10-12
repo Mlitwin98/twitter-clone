@@ -5,7 +5,67 @@
         <a href='{% url 'profile' user.username %}' class = 'm-2 deco-none badge-pill pt-2 pb-2 pl-3 pr-3'><img src={% static 'user.png' %} class = 'icon mr-3'>Profile</a>
     {% endif %}
     <a href='#' class = 'm-2 deco-none badge-pill pt-2 pb-2 pl-3 pr-3'><img src={% static 'bell.png' %} class = 'icon mr-3'>Notifications</a>
-    <a href='#' class = 'm-2 deco-none badge-pill pt-2 pb-2 pl-3 pr-3'><img src={% static 'settings.png' %} class = 'icon mr-3'>Settings</a>
-    <a href='#' class = 'm-2 deco-none badge-pill pt-2 pb-2 pl-3 pr-3'><img src={% static 'look.png' %} class = 'icon mr-3'>Look</a>
+    <a role='button' class = 'm-2 deco-none badge-pill pt-2 pb-2 pl-3 pr-3' data-toggle="modal" data-target="#settings"><img src={% static 'settings.png' %} class = 'icon mr-3'><span>Settings</span></a>
+    <a href='#' class = 'm-2 deco-none badge-pill pt-2 pb-2 pl-3 pr-3' data-toggle="modal" data-target="#look"><img src={% static 'look.png' %} class = 'icon mr-3'>Look</a>
     <a href='{% url 'logout' %}'><button  class='btn btn-outline-info m-2'>Logout</button></a>
 </div>
+
+<!-- MODAL SETTINGS -->
+    <div class="modal fade" id="settings" tabindex="-1" role="dialog" aria-labelledby="settingsLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <form action='{% url 'profile' user.username %}' method='post' enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="settingsLabel">Settings</h4>
+                    </div>
+                    <div class="modal-body">
+                        Choose language:
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="customRadio1" name="customRadio" class="custom-control-input" checked>
+                            <label class="custom-control-label" for="customRadio1">English</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="customRadio2" name="customRadio" class="custom-control-input">
+                            <label class="custom-control-label" for="customRadio2">Polish</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info m-2 badge-pill pt-2 pb-2 pl-3 pr-3" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-outline-info m-2 badge-pill pt-2 pb-2 pl-3 pr-3">Save changes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+<!-- END -->
+
+<!-- MODAL LOOK -->
+    <div class="modal fade" id="look" tabindex="-1" role="dialog" aria-labelledby="lookLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <form action='{% url 'profile' user.username %}' method='post' enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="lookLabel">Look</h4>
+                    </div>
+                    <div class="modal-body">
+                        Choose mode:
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="customRadio1" name="customRadio" class="custom-control-input" checked>
+                            <label class="custom-control-label" for="customRadio1">Dark</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="customRadio2" name="customRadio" class="custom-control-input">
+                            <label class="custom-control-label" for="customRadio2">Light</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info m-2 badge-pill pt-2 pb-2 pl-3 pr-3" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-outline-info m-2 badge-pill pt-2 pb-2 pl-3 pr-3">Save changes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+<!-- END -->

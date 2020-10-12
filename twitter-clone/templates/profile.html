@@ -48,7 +48,7 @@
                     </div>
                 </div>
                 <div class = 'm-1'>{{tweet.content}}</div>
-                <div class = 'm-1 text-white-50'><img src={% static 'heart.png' %} onClick="changeImage(this)" class = 'icon mr-2'>X <img src={% static 'comment.png' %} class = 'icon ml-5 mr-2'> Y</div>
+                <div class = 'm-1 text-white-50'><img src={% static 'heart.png' %} onClick="changeImage(this)" class = 'icon mr-2'>{{tweet.likes.count}} <img src={% static 'comment.png' %} class = 'icon ml-5 mr-2'> Y</div>
             </div>
         {% endfor %}
         <script>

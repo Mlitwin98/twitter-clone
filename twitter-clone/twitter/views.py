@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponse
 from django.contrib.auth.models import User
@@ -10,6 +10,7 @@ from django.db.models import Count
 from twitter.models import Tweet, Profile, Follow
 from twitter.myDecor import check_if_user_logged
 from twitter.forms import SignUpForm
+from django.http import HttpResponseRedirect
 
 # Create your views here.
 @check_if_user_logged
@@ -120,3 +121,14 @@ def profile(request, username, tweetID=None):
         rec_profiles = User.objects.annotate(count=Count('followers')).order_by('followers').exclude(username=request.user.username).exclude(username=username)[:5]
 
         return render(request, 'profile.html', {'userProfile':userProfile, 'tweets':tweets[::-1], 'following':following, 'followersNum':followersNum, 'followedNum':followedNum, 'rec_profiles':rec_profiles})
+
+def like_post(request, tweetID):
+    post = get_object_or_404(Tweet, id=tweetID)
+    
+    if post.likes.filter(id=request.user.id).exists():
+        post.likes.remove(request.user)
+        is_liked = False
+    else:
+        post.likes.add(request.user)
+        is_liked = True
+    return redirect('home')

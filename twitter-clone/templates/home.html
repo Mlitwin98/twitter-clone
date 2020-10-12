@@ -7,7 +7,7 @@
                     <form action='home' method='post'>
                         {% csrf_token %}
                         <div class = 'd-flex flex-row'>
-                            <div>PHOTO</div>
+                            <div><img src= "media/{{ user.profile.profilePic }}" class='profilePic mr-2' onerror="this.onerror=null; this.src='{% static 'defaultPic.jpg' %}'" alt=""></div>
                             <div class='w-100'>
                                 <textarea class='w-100 h-100 m-1 input' placeholder="Tweet" name='tweet'></textarea>
                             </div>
@@ -21,7 +21,16 @@
                     <div class = 'border border-secondary d-flex flex-column w-100 p-3'>
                         <div class = 'm-1 text-white-50'>{{tweet.author}} &#8226;&#8226;&#8226;  {{tweet.timeStamp}}</div>
                         <div class = 'm-1'>{{tweet.content}}</div>
-                        <div class = 'm-1 text-white-50'><img src={% static 'heart.png' %} onClick="changeImage(this)" class = 'icon mr-2'>X <img src={% static 'comment.png' %} class = 'icon ml-5 mr-2'> Y</div>
+                        <div class = 'm-1 text-white-50'>
+                        <a href='{% url 'like_post' tweet.id %}'>
+                        <img src={% if user in tweet.likes.all %}
+                            {% static 'heartC.png' %}
+                            class = 'mr-2'
+                            {% else %}
+                            {% static 'heart.png' %}
+                            class = 'icon mr-2'
+                            {% endif %} 
+                        onClick="changeImage(this)"></a>{{tweet.likes.count}} <img src={% static 'comment.png' %} class = 'icon ml-5 mr-2'> Y</div>
                     </div>
                 {% endfor %}
             </div>

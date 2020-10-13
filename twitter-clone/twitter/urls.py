@@ -10,6 +10,7 @@ urlpatterns = [
     path('logout', views.logout, name='logout'),
     path('home', views.home, name='home'),
     path('like/<int:tweetID>', views.like_post, name='like_post'),
+    path('change_mode', views.change_mode, name='change_mode'),
     path('<str:username>', views.profile, name='profile'),
     path('<str:username>/<int:tweetID>', views.profile, name='profile'),
     

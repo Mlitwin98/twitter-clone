@@ -16,7 +16,15 @@ class Profile(models.Model):
     bio = models.TextField(max_length=500)
     profilePic = models.ImageField(upload_to='pics', null=True, blank=True)
     backgroundPic = models.ImageField(upload_to='banners', null=True, blank=True)
-
+    
+    LIGHT_MODE = 'L'
+    DARK_MODE = 'D'
+    MODES = [
+        (DARK_MODE, 'Darkmode'),
+        (LIGHT_MODE, 'Lightmode'),
+    ]
+    mode = models.CharField(max_length=1, choices=MODES, default=DARK_MODE)
+ 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:

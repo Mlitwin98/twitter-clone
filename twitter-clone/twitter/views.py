@@ -65,6 +65,7 @@ def register(request):
 
 @login_required(redirect_field_name=None)
 def home(request):
+    print(request.user.profile.mode)
     if request.method == 'POST':
         author = request.user.username
         content = request.POST['tweet']
@@ -131,4 +132,10 @@ def like_post(request, tweetID):
     else:
         post.likes.add(request.user)
         is_liked = True
+    return redirect('home')
+
+def change_mode(request):
+    usr = User.objects.get(id=request.user.id)
+    usr.profile.mode = request.POST['mode']
+    usr.save()
     return redirect('home')

@@ -43,7 +43,7 @@
 <!-- MODAL LOOK -->
     <div class="modal fade" id="look" tabindex="-1" role="dialog" aria-labelledby="lookLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
-            <form action='{% url 'profile' user.username %}' method='post' enctype="multipart/form-data">
+            <form action='{% url 'change_mode' %}' method='post'>
                 {% csrf_token %}
                 <div class="modal-content">
                     <div class="modal-header">
@@ -52,12 +52,12 @@
                     <div class="modal-body">
                         Choose mode:
                         <div class="custom-control custom-radio">
-                            <input type="radio" id="customRadio1" name="customRadio" class="custom-control-input" checked>
-                            <label class="custom-control-label" for="customRadio1">Dark</label>
+                            <input type="radio" id="mode1" name="mode" class="custom-control-input" value='D' {% if user.profile.mode == 'D' %}checked{% endif %}>
+                            <label class="custom-control-label" for="mode1">Dark</label>
                         </div>
                         <div class="custom-control custom-radio">
-                            <input type="radio" id="customRadio2" name="customRadio" class="custom-control-input">
-                            <label class="custom-control-label" for="customRadio2">Light</label>
+                            <input type="radio" id="mode2" name="mode" class="custom-control-input" value='L'{% if user.profile.mode == 'L' %}checked{% endif %}>
+                            <label class="custom-control-label" for="mode2">Light</label>
                         </div>
                     </div>
                     <div class="modal-footer">

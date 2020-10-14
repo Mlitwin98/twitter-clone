@@ -10,10 +10,10 @@ urlpatterns = [
     path('logout', views.logout, name='logout'),
     path('home', views.home, name='home'),
     path('like/<int:tweetID>', views.like_post, name='like_post'),
+    path('delete/<int:tweetID>', views.delete_post, name='delete_post'),
+    path('follow_profile/<str:profileUsername>', views.follow_profile, name='follow_profile'),
     path('change_mode', views.change_mode, name='change_mode'),
-    path('<str:username>', views.profile, name='profile'),
-    path('<str:username>/<int:tweetID>', views.profile, name='profile'),
-    
+    path('<str:username>', views.profile, name='profile'),    
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

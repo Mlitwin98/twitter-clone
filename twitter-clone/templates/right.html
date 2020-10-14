@@ -1,4 +1,5 @@
 {% load static %}
+{% load extra_tags %}
 <div class = 'container'>
     <div class='right_profiles w-75'>
         <div class='m-2 p-2'>Recommended profiles:</div>
@@ -10,12 +11,12 @@
                 </div>
                 <div class='d-flex flex-row-reverse flex-fill'>
                     <div class='my-auto'>
-                        <form action='{% url 'profile' profile.username %}' method='post'>
+                        <form action='{% url 'follow_profile' profile.username %}' method='post'>
                             {% csrf_token %}
-                            {% if following %}
+                            {% if user.id in profile.following.all|get_value_in_qs:'following_user_id' %}
                                 <button name='unfollow' type='submit'  class='btn btn-info badge-pill pt-2 pb-2 pl-3 pr-3'>Followed</button>
                                 {% else %}
-                                    <button name='follow' type='submit'  class='btn btn-outline-info badge-pill pt-2 pb-2 pl-3 pr-3'>Follow</button>
+                                <button name='follow' type='submit'  class='btn btn-outline-info badge-pill pt-2 pb-2 pl-3 pr-3'>Follow</button>
                             {% endif %}
                         </form>
                     </div>

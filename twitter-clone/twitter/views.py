@@ -65,7 +65,6 @@ def register(request):
 
 @login_required(redirect_field_name=None)
 def home(request):
-    print(request.user.profile.mode)
     if request.method == 'POST':
         author = request.user.username
         content = request.POST['tweet']
@@ -80,30 +79,21 @@ def home(request):
             followedUsers.append(User.objects.get(id=followed.user_id_id).username)
         tweets = Tweet.objects.filter(author__in=followedUsers)
         
+        # exclude followed profiles from reccomended
         rec_profiles = User.objects.annotate(count=Count('followers')).order_by('followers').exclude(username=request.user.username)[:5]
 
         return render(request, 'home.html', {'tweets':tweets[::-1], 'rec_profiles':rec_profiles})
 
-def profile(request, username, tweetID=None):
+def profile(request, username):
     if request.method == 'POST':
-        if 'follow' in request.POST:
-            Follow.objects.create(user_id=User.objects.get(username=username), following_user_id=request.user)
-            return redirect('profile', username=username)
-        elif 'unfollow' in request.POST:
-            Follow.objects.filter(user_id=User.objects.get(username=username), following_user_id=request.user).delete()
-            return redirect('profile', username=username)
-        elif 'delete' in request.POST:
-            Tweet.objects.get(id=tweetID).delete()
-            return redirect('profile', username=username)
-        else:
-            user = User.objects.get(username=username)
+        user = User.objects.get(username=username)
 
-            user.profile.bio = request.POST['bio']
-            user.profile.profilePic = request.FILES['pic'] if 'pic' in request.FILES else user.profile.profilePic
-            user.profile.backgroundPic = request.FILES['banner'] if 'banner' in request.FILES else user.profile.backgroundPic
+        user.profile.bio = request.POST['bio']
+        user.profile.profilePic = request.FILES['pic'] if 'pic' in request.FILES else user.profile.profilePic
+        user.profile.backgroundPic = request.FILES['banner'] if 'banner' in request.FILES else user.profile.backgroundPic
 
-            user.save()
-            return redirect('profile', username=username)
+        user.save()
+        return redirect('profile', username=username)
     else:
         try:
             userProfile = User.objects.get(username=username)
@@ -117,12 +107,22 @@ def profile(request, username, tweetID=None):
             if userProfile.id == follow.user_id_id:
                 following=True
 
-        followersNum = request.user.following.all().count()
-        followedNum = request.user.followers.all().count()
+        # exclude followed profiles from reccomended
         rec_profiles = User.objects.annotate(count=Count('followers')).order_by('followers').exclude(username=request.user.username).exclude(username=username)[:5]
 
-        return render(request, 'profile.html', {'userProfile':userProfile, 'tweets':tweets[::-1], 'following':following, 'followersNum':followersNum, 'followedNum':followedNum, 'rec_profiles':rec_profiles})
+        return render(request, 'profile.html', {'userProfile':userProfile, 'tweets':tweets[::-1], 'following':following, 'rec_profiles':rec_profiles})
 
+@login_required(redirect_field_name=None)
+def delete_post(request, tweetID):
+    if request.method == 'POST':
+        tweet = Tweet.objects.get(id=tweetID)
+        if tweet.author == request.user.username:
+            tweet.delete()
+        return redirect('profile', username=request.user.username)
+    else:
+        return redirect('home')
+
+@login_required(redirect_field_name=None)
 def like_post(request, tweetID):
     post = get_object_or_404(Tweet, id=tweetID)
     
@@ -132,10 +132,26 @@ def like_post(request, tweetID):
     else:
         post.likes.add(request.user)
         is_liked = True
-    return redirect('home')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+@login_required(redirect_field_name=None)
 def change_mode(request):
-    usr = User.objects.get(id=request.user.id)
-    usr.profile.mode = request.POST['mode']
-    usr.save()
-    return redirect('home')
+    if request.method == 'POST':
+        usr = User.objects.get(id=request.user.id)
+        usr.profile.mode = request.POST['mode']
+        usr.save()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required(redirect_field_name=None)
+def follow_profile(request, profileUsername):
+    if request.method == 'POST':
+        if 'follow' in request.POST:
+            Follow.objects.create(user_id=User.objects.get(username=profileUsername), following_user_id=request.user)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        elif 'unfollow' in request.POST:
+            Follow.objects.filter(user_id=User.objects.get(username=profileUsername), following_user_id=request.user).delete()
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return redirect('home')

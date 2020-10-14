@@ -1,5 +1,6 @@
 {% extends 'main_template.html' %}
 {% load static %}
+{% load extra_tags %}
 {% block content %}
     <div class = 'border border-secondary border-top-0 p-1 pl-3'>
             <div class = 'font-weight-bold f-20'>{{ userProfile.username }}</div>
@@ -15,12 +16,12 @@
                             <button  class='btn btn-outline-info badge-pill pt-2 pb-2 pl-3 pr-3 my-auto' data-toggle="modal" data-target="#editProfile">Edit profile</button>
                             {% else %}
                             {% if user.is_authenticated %}
-                            <form action='{% url 'profile' userProfile.username %}' method='post'>
+                            <form action='{% url 'follow_profile' userProfile.username %}' method='post'>
                                 {% csrf_token %}
-                                {% if following %}
+                                {% if user.id in userProfile.following.all|get_value_in_qs:'following_user_id' %}
                                     <button name='unfollow' type='submit'  class='btn btn-info badge-pill pt-2 pb-2 pl-3 pr-3'>Followed</button>
                                     {% else %}
-                                        <button name='follow' type='submit'  class='btn btn-outline-info badge-pill pt-2 pb-2 pl-3 pr-3'>Follow</button>
+                                    <button name='follow' type='submit'  class='btn btn-outline-info badge-pill pt-2 pb-2 pl-3 pr-3'>Follow</button>
                                 {% endif %}
                             </form>
                             {% endif %}
@@ -32,7 +33,7 @@
             <div class = 'text-white-50'>{{ userProfile.email }}</div><br>
             <div class = 'mt-2 mb-2'>{{ userProfile.profile.bio }}</div><br>
             <div class = 'text-white-50'>Joined {{ userProfile.date_joined }}</div>
-            <div class = 'font-weight-bold'><span class='font-weight-normal text-white-50'>Follows </span>{{ followedNum }}<span class='ml-5 font-weight-normal text-white-50'>Followed by </span>{{ followersNum }}</div>
+            <div class = 'font-weight-bold'><span class='font-weight-normal text-white-50'>Follows </span>{{ userProfile.followers.count }}<span class='ml-5 font-weight-normal text-white-50'>Followed by </span>{{ userProfile.following.count }}</div>
         </div>
         {% for tweet in tweets %}
             <div class = 'border border-secondary d-flex flex-column w-100 p-3'>
@@ -40,10 +41,12 @@
                     <div class = 'm-1 text-white-50 flex-fill'>{{tweet.author}} &#8226;&#8226;&#8226;  {{tweet.timeStamp}}</div>
                     <div class = 'd-flex flex-row-reverse flex-fill'>
                         <div>
-                        <form action='{% url 'profile' username=user.username tweetID=tweet.id %}' method='post'>
+                        {% if user.username == tweet.author %}
+                        <form action='{% url 'delete_post' tweet.id %}' method='post'>
                             {% csrf_token %}
                             <button type='submit' name='delete' class = 'btn btn-info badge-pill pt-2 pb-2 pl-3 pr-3'>Delete</button></a>
                         </form>
+                        {% endif %}
                         </div>
                     </div>
                 </div>

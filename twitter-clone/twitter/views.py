@@ -2,15 +2,16 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponse
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, logout as auth_logout, login as auth_login
 from django.contrib import messages
 from django.db.models import Count
+from django.template.loader import render_to_string
+from django.http import HttpResponseRedirect, JsonResponse
 
-from twitter.models import Tweet, Profile, Follow
+
+from twitter.models import Tweet, Follow
 from twitter.myDecor import check_if_user_logged
 from twitter.forms import SignUpForm
-from django.http import HttpResponseRedirect
 
 # Create your views here.
 @check_if_user_logged
@@ -79,8 +80,7 @@ def home(request):
             followedUsers.append(User.objects.get(id=followed.user_id_id).username)
         tweets = Tweet.objects.filter(author__in=followedUsers)
         
-        # exclude followed profiles from reccomended
-        rec_profiles = User.objects.annotate(count=Count('followers')).order_by('followers').exclude(username=request.user.username)[:5]
+        rec_profiles = User.objects.annotate(count=Count('followers')).order_by('followers').exclude(username=request.user.username).exclude(id__in=request.user.followers.all().values_list('user_id', flat=True))[:5]
 
         return render(request, 'home.html', {'tweets':tweets[::-1], 'rec_profiles':rec_profiles})
 
@@ -107,8 +107,7 @@ def profile(request, username):
             if userProfile.id == follow.user_id_id:
                 following=True
 
-        # exclude followed profiles from reccomended
-        rec_profiles = User.objects.annotate(count=Count('followers')).order_by('followers').exclude(username=request.user.username).exclude(username=username)[:5]
+        rec_profiles = User.objects.annotate(count=Count('followers')).order_by('followers').exclude(username=request.user.username).exclude(username=username).exclude(id__in=request.user.followers.all().values_list('user_id', flat=True))[:5]
 
         return render(request, 'profile.html', {'userProfile':userProfile, 'tweets':tweets[::-1], 'following':following, 'rec_profiles':rec_profiles})
 
@@ -123,16 +122,23 @@ def delete_post(request, tweetID):
         return redirect('home')
 
 @login_required(redirect_field_name=None)
-def like_post(request, tweetID):
-    post = get_object_or_404(Tweet, id=tweetID)
+def like_post(request):
+    tweet = get_object_or_404(Tweet, id=request.POST.get('id'))
     
-    if post.likes.filter(id=request.user.id).exists():
-        post.likes.remove(request.user)
+    if tweet.likes.filter(id=request.user.id).exists():
+        tweet.likes.remove(request.user)
         is_liked = False
     else:
-        post.likes.add(request.user)
+        tweet.likes.add(request.user)
         is_liked = True
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    context = {
+        'tweet': tweet,
+        'is_liked': is_liked,
+    }
+
+    if request.is_ajax():
+        html = render_to_string('tweet.html', context, request=request)
+        return JsonResponse({'form':html})
 
 @login_required(redirect_field_name=None)
 def change_mode(request):

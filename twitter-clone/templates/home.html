@@ -18,20 +18,9 @@
                     </form>
                 </div>
                 {% for tweet in tweets %}
-                    <div class = 'border border-secondary d-flex flex-column w-100 p-3'>
-                        <div class = 'm-1 text-white-50'>{{tweet.author}} &#8226;&#8226;&#8226;  {{tweet.timeStamp}}</div>
-                        <div class = 'm-1'>{{tweet.content}}</div>
-                        <div class = 'm-1 text-white-50'>
-                        <a href='{% url 'like_post' tweet.id %}'>
-                        <img src={% if user in tweet.likes.all %}
-                            {% static 'heartC.png' %}
-                            class = 'mr-2'
-                            {% else %}
-                            {% static 'heart.png' %}
-                            class = 'icon mr-2'
-                            {% endif %} 
-                        onClick="changeImage(this)"></a>{{tweet.likes.count}} <img src={% static 'comment.png' %} class = 'icon ml-5 mr-2'> Y</div>
-                    </div>
+                <div class = 'border border-secondary d-flex flex-column w-100 p-3' id='tweet-section-{{ tweet.id }}'>
+                    {% include 'tweet.html' %}
+                </div>
                 {% endfor %}
             </div>
         <script>

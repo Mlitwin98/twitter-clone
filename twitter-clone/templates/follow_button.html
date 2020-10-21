@@ -1,0 +1,10 @@
+<div id = 'follow-section-{{userProfile.id}}'>
+    <form action='{% url 'follow_profile' %}' method='post'>
+        {% csrf_token %}
+        {% if is_following %}
+            <button name='follow' id='follow' type='submit' value = '{{ userProfile.id }}'  class='btn btn-info badge-pill pt-2 pb-2 pl-3 pr-3'>Followed</button>
+            {% else %}
+            <button name='follow' id='follow' type='submit' value = '{{ userProfile.id }}'  class='btn btn-outline-info badge-pill pt-2 pb-2 pl-3 pr-3'>Follow</button>
+        {% endif %}
+    </form>
+</div>

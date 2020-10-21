@@ -11,7 +11,7 @@ urlpatterns = [
     path('home', views.home, name='home'),
     path('like', views.like_post, name='like_post'),
     path('delete/<int:tweetID>', views.delete_post, name='delete_post'),
-    path('follow_profile/<str:profileUsername>', views.follow_profile, name='follow_profile'),
+    path('follow_profile', views.follow_profile, name='follow_profile'),
     path('change_mode', views.change_mode, name='change_mode'),
     path('<str:username>', views.profile, name='profile'),    
 ]

@@ -1,6 +1,5 @@
 {% extends 'main_template.html' %}
 {% load static %}
-{% load extra_tags %}
 {% block content %}
     <div class = 'border border-secondary border-top-0 p-1 pl-3'>
             <div class = 'font-weight-bold f-20'>{{ userProfile.username }}</div>
@@ -16,14 +15,7 @@
                             <button  class='btn btn-outline-info badge-pill pt-2 pb-2 pl-3 pr-3 my-auto' data-toggle="modal" data-target="#editProfile">Edit profile</button>
                             {% else %}
                             {% if user.is_authenticated %}
-                            <form action='{% url 'follow_profile' userProfile.username %}' method='post'>
-                                {% csrf_token %}
-                                {% if user.id in userProfile.following.all|get_value_in_qs:'following_user_id' %}
-                                    <button name='unfollow' type='submit'  class='btn btn-info badge-pill pt-2 pb-2 pl-3 pr-3'>Followed</button>
-                                    {% else %}
-                                    <button name='follow' type='submit'  class='btn btn-outline-info badge-pill pt-2 pb-2 pl-3 pr-3'>Follow</button>
-                                {% endif %}
-                            </form>
+                                {% include 'follow_button.html' %}
                             {% endif %}
                         {% endif %}
                     </div>
@@ -36,7 +28,7 @@
             <div class = 'font-weight-bold'><span class='font-weight-normal text-white-50'>Follows </span>{{ userProfile.followers.count }}<span class='ml-5 font-weight-normal text-white-50'>Followed by </span>{{ userProfile.following.count }}</div>
         </div>
         {% for tweet in tweets %}
-        <div class = 'border border-secondary d-flex flex-column w-100 p-3' id='tweet-section'>
+        <div class = 'border border-secondary d-flex flex-column w-100 p-3' id='tweet-section-{{ tweet.id }}'>
             {% include 'tweet.html' %}
         </div>
         {% endfor %}

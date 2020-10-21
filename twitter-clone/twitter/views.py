@@ -102,14 +102,14 @@ def profile(request, username):
 
         tweets = Tweet.objects.filter(author__exact=username)
 
-        following = False
+        is_following = False
         for follow in request.user.followers.all():
             if userProfile.id == follow.user_id_id:
-                following=True
-
+                is_following=True
+        print(is_following)
         rec_profiles = User.objects.annotate(count=Count('followers')).order_by('followers').exclude(username=request.user.username).exclude(username=username).exclude(id__in=request.user.followers.all().values_list('user_id', flat=True))[:5]
 
-        return render(request, 'profile.html', {'userProfile':userProfile, 'tweets':tweets[::-1], 'following':following, 'rec_profiles':rec_profiles})
+        return render(request, 'profile.html', {'userProfile':userProfile, 'tweets':tweets[::-1], 'is_following':is_following, 'rec_profiles':rec_profiles})
 
 @login_required(redirect_field_name=None)
 def delete_post(request, tweetID):
@@ -151,13 +151,22 @@ def change_mode(request):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @login_required(redirect_field_name=None)
-def follow_profile(request, profileUsername):
-    if request.method == 'POST':
-        if 'follow' in request.POST:
-            Follow.objects.create(user_id=User.objects.get(username=profileUsername), following_user_id=request.user)
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-        elif 'unfollow' in request.POST:
-            Follow.objects.filter(user_id=User.objects.get(username=profileUsername), following_user_id=request.user).delete()
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+def follow_profile(request):
+    followed_user = get_object_or_404(User, id=request.POST.get('id'))
+
+    if Follow.objects.filter(user_id=followed_user.id, following_user_id = request.user.id).exists():
+        Follow.objects.filter(user_id=followed_user.id, following_user_id = request.user.id).delete()
+        is_following = False
     else:
-        return redirect('home')
+        Follow.objects.create(user_id=followed_user, following_user_id = request.user)
+        is_following = True
+
+    context = {
+        'profile':followed_user,
+        'userProfile':followed_user,
+        'is_following':is_following
+    }
+
+    if request.is_ajax():
+        html = render_to_string('follow_button.html', context, request=request)
+        return JsonResponse({'form':html})

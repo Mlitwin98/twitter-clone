@@ -3,6 +3,7 @@
 {% block content %}
             <div class = 'container d-flex flex-column'>
                 <div class = 'border border-secondary border-top-0 p-3 font-weight-bold'>Main Page</div>
+                <div class = 'border-bottom border-secondary border-4'>
                 <div class = 'border border-secondary p-3 d-flex flex-column'>
                     <form action='home' method='post'>
                         {% csrf_token %}
@@ -16,6 +17,7 @@
                             <button class = 'btn btn-info badge-pill w-25 mt-3 button'>Tweet</button>
                         </div>
                     </form>
+                </div>
                 </div>
                 {% for tweet in tweets %}
                 <div class = 'border border-secondary d-flex flex-column w-100 p-3' id='tweet-section-{{ tweet.id }}'>

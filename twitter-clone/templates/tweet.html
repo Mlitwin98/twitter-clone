@@ -1,5 +1,7 @@
 {% load static %}
-<div class = 'm-1 text-white-50'>{{tweet.author}} &#8226;&#8226;&#8226;  {{tweet.timeStamp}}</div>
+<div class = 'm-1 text-white-50'>
+    <img src= "media/{{ tweet.author.profile.profilePic }}" class='profilePic nearTweet mr-2' onerror="this.onerror=null; this.src='{% static 'defaultPic.jpg' %}'" alt="">
+    {{tweet.author}} &#8226;&#8226;&#8226;  {{tweet.timeStamp}}</div>
 <div class = 'd-flex flex-row-reverse flex-fill'>
     <div>
         {% if user.username in request.path %}

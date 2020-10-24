@@ -5,7 +5,7 @@ from django.db.models.signals import post_save
 
 # Create your models here.
 class Tweet(models.Model):
-    author = models.CharField(max_length=50)
+    author = models.ForeignKey(User, related_name='author', on_delete=models.CASCADE)
     timeStamp = models.DateTimeField(auto_now=True)
     content = models.TextField()
     likes = models.ManyToManyField(User, related_name='post_likes', blank=True)
@@ -38,4 +38,29 @@ def save_user_profile(sender, instance, **kwargs):
 class Follow(models.Model):
     user_id = models.ForeignKey(User, related_name='following', on_delete=models.CASCADE)
     following_user_id = models.ForeignKey(User, related_name='followers', on_delete=models.CASCADE)
-    
+
+
+class Notification(models.Model):
+    sender = models.ForeignKey(User, related_name='sender', on_delete=models.CASCADE)
+    receiver = models.ForeignKey(User, related_name='your_notifications', on_delete=models.CASCADE)
+    target = models.ForeignKey(Tweet, related_name='target', on_delete=models.CASCADE)
+
+    LIKED = 'L'
+    POSTED = 'P'
+    COMMENTED = 'C'
+    TYPES = [
+        (LIKED, 'liked'),
+        (POSTED, 'posted'),
+        (COMMENTED, 'commented')
+    ]
+    type = models.CharField(max_length=1, choices=TYPES)
+    seen = models.BooleanField(default=False)
+
+    def __str__(self):
+        switcher = {
+            'L': f'{self.sender} liked your tweet!',
+            'P': f'{self.sender} posted a new tweet!',
+            'C': f'{self.sender} commented on your tweet!',
+        }
+        
+        return switcher.get(self.type)

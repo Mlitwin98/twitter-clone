@@ -74,6 +74,7 @@
 .profilePic{
     min-width:49px;
     max-width:100px;
+    border-radius: 50%;
 }
 
 .profileBanner{
@@ -88,4 +89,13 @@ textarea{
 
 .icon{
     filter: invert(94%) sepia(6%) saturate(0%) hue-rotate(110deg) brightness(105%) contrast(109%);
+}
+
+.border-4{
+    border-width: 4px !important;
+}
+
+.nearTweet{
+    min-width:20px !important;
+    max-width:30px !important;
 }

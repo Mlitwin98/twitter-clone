@@ -73,17 +73,20 @@ def home(request):
         tweet = Tweet(author=author, content=content)
         tweet.save()
 
+        for follower in request.user.following.all().values_list('following_user_id', flat=True):
+            Notification.objects.create(sender = request.user, receiver = User.objects.get(id=follower), target = tweet, type = 'L')
+
         return redirect('home')
     else:
         followedUsers = [request.user]
-        followedQuery = request.user.followers.all()
-        for followed in followedQuery:
+        for followed in request.user.followers.all():
             followedUsers.append(User.objects.get(id=followed.user_id_id))
         
         tweets = Tweet.objects.filter(author__in=followedUsers).order_by('-timeStamp')
         
         rec_profiles = User.objects.annotate(count=Count('followers')).order_by('followers').exclude(username=request.user.username).exclude(id__in=request.user.followers.all().values_list('user_id', flat=True))[:5]
 
+        print(request.user.your_notifications.all())
         return render(request, 'home.html', {'tweets':tweets, 'rec_profiles':rec_profiles})
 
 def profile(request, username):
@@ -102,7 +105,7 @@ def profile(request, username):
         except User.DoesNotExist:
             return HttpResponse('User Not Found')
 
-        tweets = Tweet.objects.filter(author__exact=userProfile).order_by('timeStamp')
+        tweets = Tweet.objects.filter(author__exact=userProfile).order_by('-timeStamp')
 
         is_following = False
         for follow in request.user.followers.all():
@@ -117,7 +120,7 @@ def profile(request, username):
 def delete_post(request, tweetID):
     if request.method == 'POST':
         tweet = Tweet.objects.get(id=tweetID)
-        if tweet.author == request.user.username:
+        if tweet.author == request.user:
             tweet.delete()
         return redirect('profile', username=request.user.username)
     else:
@@ -135,8 +138,7 @@ def like_post(request):
         is_liked = True
 
         if(request.user.username != tweet.author):
-            notification = Notification(sender = request.user, receiver = User.objects.get(username = tweet.author), target = tweet, type = 'L')
-            notification.save()
+            Notification.objects.create(sender = request.user, receiver = User.objects.get(username = tweet.author), target = tweet, type = 'L')
             
     context = {
         'tweet': tweet,
@@ -166,6 +168,7 @@ def follow_profile(request):
         is_following = False
     else:
         Follow.objects.create(user_id=followed_user, following_user_id = request.user)
+        Notification.objects.create(sender = request.user, receiver = followed_user, target = None, type = 'F')
         is_following = True
 
     context = {
@@ -177,3 +180,6 @@ def follow_profile(request):
     if request.is_ajax():
         html = render_to_string('follow_button.html', context, request=request)
         return JsonResponse({'form':html})
+
+
+#Notification on post comment

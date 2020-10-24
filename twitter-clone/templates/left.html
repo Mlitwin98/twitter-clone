@@ -1,10 +1,16 @@
 {% load static %}
+{% load extra_tags %}
 <div class = 'd-flex flex-column'>
     <a href='{% url 'home' %}' class = 'm-2 deco-none badge-pill pt-2 pb-2 pl-3 pr-3'><img src={% static 'home.png' %} class = 'icon mr-3'>Home</a>
     {% if user.is_authenticated %}
         <a href='{% url 'profile' user.username %}' class = 'm-2 deco-none badge-pill pt-2 pb-2 pl-3 pr-3'><img src={% static 'user.png' %} class = 'icon mr-3'>Profile</a>
     {% endif %}
-    <a href='#' class = 'm-2 deco-none badge-pill pt-2 pb-2 pl-3 pr-3'><img src={% static 'bell.png' %} class = 'icon mr-3'>Notifications</a>
+    <a href='#' class = 'm-2 deco-none badge-pill pt-2 pb-2 pl-3 pr-3'><img src={% static 'bell.png' %} class = 'icon mr-3'>
+    Notifications 
+    {% if False in user.your_notifications.all|get_value_in_qs:"seen" %}
+    ({% count_values_in_qs user.your_notifications.all 'seen' False%}!)
+    {% endif %}
+    </a>
     <a role='button' class = 'm-2 deco-none badge-pill pt-2 pb-2 pl-3 pr-3' data-toggle="modal" data-target="#settings"><img src={% static 'settings.png' %} class = 'icon mr-3'><span>Settings</span></a>
     <a href='#' class = 'm-2 deco-none badge-pill pt-2 pb-2 pl-3 pr-3' data-toggle="modal" data-target="#look"><img src={% static 'look.png' %} class = 'icon mr-3'>Look</a>
     <a href='{% url 'logout' %}'><button  class='btn btn-outline-info m-2'>Logout</button></a>

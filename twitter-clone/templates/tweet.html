@@ -1,11 +1,13 @@
 {% load static %}
-<div class = 'm-1 text-white-50'>
+<div class = 'd-flex'>
+<div class = 'm-1 text-white-50 flex-fill'>
     <img src= "media/{{ tweet.author.profile.profilePic }}" class='profilePic nearTweet mr-2' onerror="this.onerror=null; this.src='{% static 'defaultPic.jpg' %}'" alt="">
-    {{tweet.author}} &#8226;&#8226;&#8226;  {{tweet.timeStamp}}</div>
+    {{tweet.author}} &#8226;&#8226;&#8226;  {{tweet.timeStamp}}
+</div>
 <div class = 'd-flex flex-row-reverse flex-fill'>
     <div>
         {% if user.username in request.path %}
-            {% if user.username == tweet.author %}
+            {% if user == tweet.author %}
             <form action='{% url 'delete_post' tweet.id %}' method='post'>
                 {% csrf_token %}
                 <button type='submit' name='delete' class = 'btn btn-info badge-pill pt-2 pb-2 pl-3 pr-3'>Delete</button></a>
@@ -13,6 +15,7 @@
             {% endif %}
         {% endif %}
     </div>
+</div>
 </div>
 <div class = 'm-1'>{{tweet.content}}</div>
 <div class = 'ml-1 text-white-50 pb-0'>

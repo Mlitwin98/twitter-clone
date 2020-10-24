@@ -48,19 +48,25 @@ class Notification(models.Model):
     LIKED = 'L'
     POSTED = 'P'
     COMMENTED = 'C'
+    FOLLOWED = 'F'
     TYPES = [
         (LIKED, 'liked'),
         (POSTED, 'posted'),
-        (COMMENTED, 'commented')
+        (COMMENTED, 'commented'),
+        (FOLLOWED, 'followed')
     ]
     type = models.CharField(max_length=1, choices=TYPES)
     seen = models.BooleanField(default=False)
 
     def __str__(self):
+        return str(self.seen)
+
+    def Notify(self):
         switcher = {
             'L': f'{self.sender} liked your tweet!',
             'P': f'{self.sender} posted a new tweet!',
             'C': f'{self.sender} commented on your tweet!',
+            'F': f'{self.sender} is now following you!',
         }
         
         return switcher.get(self.type)

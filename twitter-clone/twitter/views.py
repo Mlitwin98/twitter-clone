@@ -137,7 +137,7 @@ def like_post(request):
         tweet.likes.add(request.user)
         is_liked = True
 
-        if(request.user.username != tweet.author):
+        if(request.user != tweet.author):
             Notification.objects.create(sender = request.user, receiver = User.objects.get(username = tweet.author), target = tweet, type = 'L')
             
     context = {
@@ -181,5 +181,13 @@ def follow_profile(request):
         html = render_to_string('follow_button.html', context, request=request)
         return JsonResponse({'form':html})
 
+
+def notifications(request):
+    notifics = request.user.your_notifications.all()
+    for notific in notifics:
+        notific.seen = True
+        notific.save()
+    notifics = request.user.your_notifications.all().order_by('-id')[:10]
+    return render(request, 'notifications.html', {'notifics':notifics})
 
 #Notification on post comment

@@ -30,6 +30,9 @@
         class = 'icon mr-2'
         {% endif %} 
         id='like' onClick="changeImage(this)"  value='{{ tweet.id }}' alt='Submit'>
-        {{tweet.likes.count}} <img src={% static 'comment.png' %} class = 'icon ml-5 mr-2'> Y
+        {{tweet.likes.count}}
+        <a href = '{% url 'tweet_details' tweet.id %}' class='deco-none no-hover'>
+            <img src={% static 'comment.png' %} class = 'icon ml-5 mr-2'> {{tweet.main_tweet.count}}
+        </a>
     </form>
 </div>

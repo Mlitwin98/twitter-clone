@@ -11,11 +11,10 @@ urlpatterns = [
     path('home', views.home, name='home'),
     path('like', views.like_post, name='like_post'),
     path('notifications', views.notifications, name='notifications'),
+    path('comment/<int:tweetID>', views.comment, name='comment' ),
+    path('tweet_details/<int:tweetID>', views.tweet_details, name='tweet_details'),
     path('delete/<int:tweetID>', views.delete_post, name='delete_post'),
     path('follow_profile', views.follow_profile, name='follow_profile'),
     path('change_mode', views.change_mode, name='change_mode'),
     path('<str:username>', views.profile, name='profile'),    
-]
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

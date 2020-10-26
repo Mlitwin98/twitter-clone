@@ -70,3 +70,9 @@ class Notification(models.Model):
         }
         
         return switcher.get(self.type)
+
+class Comment(models.Model):
+    author = models.ForeignKey(User, related_name='comment_author', on_delete=models.CASCADE)
+    main_tweet = models.ForeignKey(Tweet, related_name='main_tweet', on_delete=models.CASCADE)
+    timeStamp = models.DateTimeField(auto_now=True)
+    content = models.TextField()

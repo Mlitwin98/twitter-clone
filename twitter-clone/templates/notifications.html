@@ -5,7 +5,7 @@
         <div class = 'border border-secondary border-top-0 p-3 font-weight-bold'>Notifications:</div>
         <div class = 'border-bottom border-secondary border-4'></div>
         {% for notific in notifics %}
-            <div class = 'border border-secondary d-flex flex-row w-100 p-3' id='tweet-section-{{ tweet.id }}'>
+            <div class = 'border border-secondary d-flex flex-row w-100 p-3'>
                 <img src= "media/{{ notific.sender.profile.profilePic }}" class='profilePic nearTweet mr-2' onerror="this.onerror=null; this.src='{% static 'defaultPic.jpg' %}'" alt="">
                 {{notific.Notify}}
             </div>

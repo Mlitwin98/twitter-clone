@@ -131,8 +131,5 @@ AUTHENTICATION_BACKENDS = [
 
 LOGIN_URL='/'
 
-ROOT_DIR = os.path.dirname(os.path.dirname(__file__))
-def location(f):
-    return os.path.join(ROOT_DIR, f)
-MEDIA_ROOT =  os.path.join(BASE_DIR, 'media/') 
-MEDIA_URL = '/media/'
+MEDIA_ROOT =  os.path.join(BASE_DIR, 'media').replace('\\', '/')
+MEDIA_URL = 'media/'

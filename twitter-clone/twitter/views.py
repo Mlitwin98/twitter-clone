@@ -10,7 +10,7 @@ from django.template.loader import render_to_string
 from django.http import HttpResponseRedirect, JsonResponse
 
 
-from twitter.models import Tweet, Follow, Notification
+from twitter.models import Tweet, Follow, Notification, Comment
 from twitter.myDecor import check_if_user_logged
 from twitter.forms import SignUpForm
 
@@ -86,7 +86,6 @@ def home(request):
         
         rec_profiles = User.objects.annotate(count=Count('followers')).order_by('followers').exclude(username=request.user.username).exclude(id__in=request.user.followers.all().values_list('user_id', flat=True))[:5]
 
-        print(request.user.your_notifications.all())
         return render(request, 'home.html', {'tweets':tweets, 'rec_profiles':rec_profiles})
 
 def profile(request, username):
@@ -189,5 +188,26 @@ def notifications(request):
         notific.save()
     notifics = request.user.your_notifications.all().order_by('-id')[:10]
     return render(request, 'notifications.html', {'notifics':notifics})
+
+
+def tweet_details(request, tweetID):
+    tweet = Tweet.objects.get(id=tweetID)
+    comments = tweet.main_tweet.all().order_by('-timeStamp')
+    
+    return render(request, 'tweet_details.html', {'tweet':tweet, 'comments':comments})
+
+
+def comment(request, tweetID):
+    if request.method == 'POST':
+        author = request.user
+        content = request.POST['comment']
+        tweet = Tweet.objects.get(id=tweetID)
+        Comment.objects.create(author=author, main_tweet=tweet, content=content)
+
+        if(request.user != tweet.author):
+            Notification.objects.create(sender = request.user, receiver = tweet.author, target = tweet, type = 'C')
+        return redirect(tweet_details, tweetID=tweetID)
+    else:
+        return redirect(home)
 
 #Notification on post comment

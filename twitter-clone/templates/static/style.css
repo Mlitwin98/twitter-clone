@@ -99,3 +99,7 @@ textarea{
     min-width:20px !important;
     max-width:30px !important;
 }
+
+.no-hover, .no-hover:hover{
+    background-color: transparent !important;
+}
